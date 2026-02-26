@@ -1,0 +1,27 @@
+name: Facebook Auto Post
+
+on:
+  schedule:
+    - cron: "0 12 * * 1" # Every Monday at 12:00
+  workflow_dispatch:
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install axios
+
+      - name: Post to Facebook
+        env:
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+        run: node facebook-post.js
